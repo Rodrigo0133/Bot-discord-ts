@@ -11,6 +11,7 @@ import { executarOla } from "./commands/ola";
 import { executarRoleta } from "./commands/roleta";
 import { executarStock } from "./commands/stock";
 import { executarTicket } from "./commands/ticket";
+import { executarHelp } from "./commands/help"
 import { ligarBaseDados } from "./database/database";
 
 const client = new Client({
@@ -27,6 +28,7 @@ const commandHandlers: Record<string, CommandHandler> = {
   roleta: executarRoleta,
   stock: executarStock,
   ticket: executarTicket,
+  help: executarHelp,
 }; // name of commands
 
 client.on(Events.InteractionCreate, async (interaction) => {
