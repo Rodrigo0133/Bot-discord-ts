@@ -5,6 +5,7 @@ import { olaCommand } from "./commands/ola";
 import { roletaCommand } from "./commands/roleta";
 import { stockCommand } from "./commands/stock";
 import { ticketCommand } from "./commands/ticket";
+import {helpcommand} from "./commands/help"
 
 const commands = [
   olaCommand,
@@ -12,6 +13,7 @@ const commands = [
   roletaCommand,
   stockCommand,
   addCommand,
+  helpcommand,
 ];
 
 async function registarComandos(): Promise<void> {
