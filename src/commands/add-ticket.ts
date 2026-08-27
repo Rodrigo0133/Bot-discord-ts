@@ -2,7 +2,7 @@ import {
   type ChatInputCommandInteraction,
   MessageFlags,
 } from "discord.js";
-import { CARGO_ADICIONAR_TICKETS_ID } from "../config/constants";
+import { CARGO_ADICIONAR_TICKETS_ID, CARGO_ADICIONAR_TICKETS_ID2 } from "../config/constants";
 import { User } from "../database/database";
 
 export const addCommand = {
@@ -47,7 +47,10 @@ export async function executarAddTicket(
     return;
   }
 
-  if (!interaction.member.roles.cache.has(CARGO_ADICIONAR_TICKETS_ID)) {
+  if (
+    !interaction.member.roles.cache.has(CARGO_ADICIONAR_TICKETS_ID) &&
+    !interaction.member.roles.cache.has(CARGO_ADICIONAR_TICKETS_ID2)
+  ) {
     await interaction.reply({
       content: "Não tens o cargo necessário para adicionar tickets.",
       flags: MessageFlags.Ephemeral,
