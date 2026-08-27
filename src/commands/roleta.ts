@@ -192,6 +192,11 @@ const cargos_vips: Premio[] = [
     nome: "Vip | BD Endless",
   },
 ];
+
+const Roleta_cargos = (Cargos: Premio[]) => {
+  const randomElement = Cargos[Math.floor(Math.random() * Cargos.length)];
+  return randomElement;
+};
 export async function executarRoleta(
   interaction: ChatInputCommandInteraction,
 ): Promise<void> {
@@ -250,7 +255,7 @@ export async function executarRoleta(
       const saldoAtualizado2 = await unb.editUserBalance(
         interaction.guildId,
         interaction.user.id,
-        { cash: 5000 },
+        { cash: 50000 },
         "Prémio da roleta",
       );
       await interaction.reply(`Parabéns! Conseguiste 50000€`);
