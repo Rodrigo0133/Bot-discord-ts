@@ -304,6 +304,26 @@ export async function executarRoleta(
       await membro.roles.add(random.id);
       await interaction.reply(`Parabéns foi-te atribuido o cargo ${random.nome}`)
       break;
+    case "vip":
+       const temTodosOsCargos2 = cargos_vips.every(({ id }) =>
+         membro.roles.cache.has(id),
+       );
+
+       if (temTodosOsCargos2) {
+         await interaction.reply(
+           "Já tens todos os cargos vips da roleta!",
+         );
+         return;
+       }
+       let random2 = Roleta_cargos(cargos_vips);
+       while (!membro.roles.cache.has(random2.id)) {
+         let random = Roleta_cargos(cargos_vips);
+       }
+       await membro.roles.add(random2.id);
+       await interaction.reply(
+         `Parabéns foi-te atribuido o cargo ${random2.nome}`,
+       );
+      break;
     default:
       console.log(premio.nome);
       break;
