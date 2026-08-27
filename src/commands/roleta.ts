@@ -20,7 +20,7 @@ export const roletaCommand = {
 };
 
 const premios = [
-  { id: "moedas_5000", nome: "5000 Moedas", peso: 34_996 },
+  { id: "moedas_5000", nome: "5000 Moedas", peso: 37_996 },
   { id: "moedas_10000", nome: "10000 Moedas", peso: 20_000 },
   { id: "level", nome: "+1 Cargo de Level", peso: 14_000 },
   {
@@ -31,7 +31,6 @@ const premios = [
   },
   { id: "vip", nome: "Vip sorteado", peso: 7_000 },
   { id: "exclusivo", nome: "Cargo Exclusivo", peso: 5_000 },
-  { id: "moedas_50000", nome: "50000 Moedas", peso: 3_000 },
   {
     id: "halloween_25",
     nome: "Cargo Halloween 25",
@@ -52,10 +51,93 @@ const premios = [
     peso: 4,
   },
 ];
+
 interface Premio {
   id: string;
   nome: string;
 }
+const cargos_level: Premio[] = [
+  {
+    id: "1036689084434874460",
+    nome: "LCN | Level 1",
+  },
+  {
+    id: "1036689239137591338",
+    nome: "LCN | Level 2",
+  },
+  {
+    id: "1036689359384096859",
+    nome: "LCN | Level 3",
+  },
+  {
+    id: "1054135107855843369",
+    nome: "LCN | Level 4",
+  },
+  {
+    id: "1036689735269236807",
+    nome: "LCN | Level 5",
+  },
+  {
+    id: "1036689865733066883",
+    nome: "LCN | Level 10",
+  },
+  {
+    id: "1036689926604980334",
+    nome: "LCN | Level 15",
+  },
+  {
+    id: "1036690352167473303",
+    nome: "LCN | Level 20",
+  },
+  {
+    id: "1036690495964971119",
+    nome: "LCN | Level 30",
+  },
+  {
+    id: "1036690587967033468",
+    nome: "LCN | Level 40",
+  },
+  {
+    id: "1095769327506030644",
+    nome: "LCN | Level 50",
+  },
+  {
+    id: "1095769610663501854",
+    nome: "LCN | Level 60",
+  },
+  {
+    id: "1095770344285020241",
+    nome: "LCN | Level 70",
+  },
+  {
+    id: "1095770612171014265",
+    nome: "LCN | Level 80",
+  },
+  {
+    id: "1095772878668058755",
+    nome: "LCN | Level 90",
+  },
+  {
+    id: "1095773119416914101",
+    nome: "LCN | Level 100",
+  },
+  {
+    id: "1202733155451150468",
+    nome: "LCN | Level 200",
+  },
+  {
+    id: "1292081351154991174",
+    nome: "LCN | Level 300",
+  },
+  {
+    id: "1354531408194048108",
+    nome: "LCN | Level 400",
+  },
+  {
+    id: "1396186073960288379",
+    nome: "LCN | Level 500",
+  },
+];
 const cargos_exclusivo: Premio[] = [
   {
     id: "1416441848616190152",
@@ -152,7 +234,7 @@ const cargos_vips: Premio[] = [
     nome: "Vip | Amor",
   },
   {
-    id: "1471285788477096007",
+    id: "1471285980525887682",
     nome: "Vip | Amizade",
   },
   {
@@ -214,8 +296,16 @@ export async function executarRoleta(
     userId: interaction.user.id,
     guildId,
   });
-
-  if (!utilizador || utilizador.tickets === 0) {
+  const  saldoAtualizado = async (dinheiro: number) => {
+    await unb.editUserBalance(
+      interaction.guildId,
+      interaction.user.id,
+      { cash: dinheiro },
+      "Prémio da roleta",
+    );
+    await interaction.editReply(`Parabéns! Conseguiste ${dinheiro}€`);
+  };
+  if (!utilizador || (utilizador.tickets === 0) || (utilizador.tickets <= 0)) {
     await interaction.reply({
       content: "Não tens tickets!",
       flags: MessageFlags.Ephemeral,
@@ -224,69 +314,48 @@ export async function executarRoleta(
   }
   if (!interaction.inCachedGuild()) return;
 
+  await interaction.deferReply();
+
   const membro = await interaction.guild.members.fetch(interaction.user.id);
   const premio = sortearPremio();
-  if (utilizador.tickets <= 0) {
-    console.log(0);
-
-    await interaction.reply({
-      content: "Não tens tickets!",
-      flags: MessageFlags.Ephemeral,
-    });
-
-    return;
-  }
 
   console.log(1);
 
-  utilizador.tickets -= 1;
-  await utilizador.save();
   switch (premio.id) {
     case "moedas_5000":
-      const saldoAtualizado = await unb.editUserBalance(
-        interaction.guildId,
-        interaction.user.id,
-        { cash: 5000 },
-        "Prémio da roleta",
-      );
-      await interaction.reply(`Parabéns! Conseguiste 5000€`);
+      await  saldoAtualizado(5000);
       break;
-    case "moedas_50000":
-      const saldoAtualizado2 = await unb.editUserBalance(
-        interaction.guildId,
-        interaction.user.id,
-        { cash: 50000 },
-        "Prémio da roleta",
-      );
-      await interaction.reply(`Parabéns! Conseguiste 50000€`);
+    case "moedas_100000":
+      await  saldoAtualizado(100000);
+
       break;
     case "halloween_24":
       if (!premio.cargo_id) {
         throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
       }
       await membro.roles.add(premio.cargo_id);
-      await interaction.reply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
+      await interaction.editReply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
       break;
     case "halloween_25":
       if (!premio.cargo_id) {
         throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
       }
       await membro.roles.add(premio.cargo_id);
-      await interaction.reply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
+      await interaction.editReply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
       break;
     case "halloween_26":
       if (!premio.cargo_id) {
         throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
       }
       await membro.roles.add(premio.cargo_id);
-      await interaction.reply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
+      await interaction.editReply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
       break;
     case "halloween_27":
       if (!premio.cargo_id) {
         throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
       }
       await membro.roles.add(premio.cargo_id);
-      await interaction.reply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
+      await interaction.editReply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
       break;
     case "exclusivo":
       const temTodosOsCargos = cargos_exclusivo.every(({ id }) =>
@@ -294,40 +363,61 @@ export async function executarRoleta(
       );
 
       if (temTodosOsCargos) {
-        await interaction.reply("Já tens todos os cargos exclusivos da roleta!");
+        await interaction.editReply(
+          "Já tens todos os cargos exclusivos da roleta!",
+        );
         return;
       }
       let random = Roleta_cargos(cargos_exclusivo);
       while (!membro.roles.cache.has(random.id)) {
-        let random = Roleta_cargos(cargos_exclusivo);
+        random = Roleta_cargos(cargos_exclusivo);
       }
       await membro.roles.add(random.id);
-      await interaction.reply(`Parabéns foi-te atribuido o cargo ${random.nome}`)
+      await interaction.editReply(
+        `Parabéns foi-te atribuido o cargo ${random.nome}`,
+      );
       break;
     case "vip":
-       const temTodosOsCargos2 = cargos_vips.every(({ id }) =>
-         membro.roles.cache.has(id),
-       );
+      const temTodosOsCargos2 = cargos_vips.every(({ id }) =>
+        membro.roles.cache.has(id),
+      );
 
-       if (temTodosOsCargos2) {
-         await interaction.reply(
-           "Já tens todos os cargos vips da roleta!",
-         );
-         return;
-       }
-       let random2 = Roleta_cargos(cargos_vips);
-       while (!membro.roles.cache.has(random2.id)) {
-         let random = Roleta_cargos(cargos_vips);
-       }
-       await membro.roles.add(random2.id);
-       await interaction.reply(
-         `Parabéns foi-te atribuido o cargo ${random2.nome}`,
+      if (temTodosOsCargos2) {
+        await interaction.editReply("Já tens todos os cargos vips da roleta!");
+        return;
+      }
+      let random2 = Roleta_cargos(cargos_vips);
+      while (!membro.roles.cache.has(random2.id)) {
+        random2 = Roleta_cargos(cargos_vips);
+      }
+      await membro.roles.add(random2.id);
+      await interaction.editReply(
+        `Parabéns foi-te atribuido o cargo ${random2.nome}`,
+      );
+      break;
+    case "level":
+      for (let i = 0; i < cargos_level.length; i++) {
+        if (!membro.roles.cache.has(cargos_level[i].id)) {
+          await membro.roles.add(cargos_level[i].id);
+          await interaction.editReply(
+            `Parabéns! Conseguiste o cargo ${cargos_level[i].nome}`,
+          );
+          break;
+        }
+      }
+       await interaction.editReply(
+         `Já tens todos os cargos level!`,
        );
+      break;
+    case "moedas_10000":
+      await saldoAtualizado(10000);
       break;
     default:
       console.log(premio.nome);
       break;
   }
+  utilizador.tickets -= 1;
+  await utilizador.save();
 }
 function sortearPremio() {
   const numeroSorteado = Math.floor(Math.random() * 100_000);
