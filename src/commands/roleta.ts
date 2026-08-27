@@ -56,7 +56,7 @@ interface Premio {
   id: string;
   nome: string;
 }
-const cargos_premio: Premio[] = [
+const cargos_exclusivo: Premio[] = [
   {
     id: "1416441848616190152",
     nome: "LCN | Aniversário 25",
@@ -108,6 +108,88 @@ const cargos_premio: Premio[] = [
   {
     id: "1138599410754912296",
     nome: "LCN | 200/2023",
+  },
+];
+const cargos_vips: Premio[] = [
+  {
+    id: "1522783859639451798",
+    nome: "Vip | Ronaldo",
+  },
+  {
+    id: "1537133717598900374",
+    nome: "Vip | Mbappé",
+  },
+  {
+    id: "1522785383434424412",
+    nome: "Vip | Messi",
+  },
+  {
+    id: "1522784071783022783",
+    nome: "Vip | Neymar",
+  },
+  {
+    id: "1537133044295794729",
+    nome: "Vip | Haaland",
+  },
+  {
+    id: "1533674249452257402",
+    nome: "Vip | Marinheiro",
+  },
+  {
+    id: "1533674383237845082",
+    nome: "Vip | Pirata",
+  },
+  {
+    id: "1460686670662734103",
+    nome: "Vip | Anjo",
+  },
+  {
+    id: "1460687189418447014",
+    nome: "Vip | Demónio",
+  },
+  {
+    id: "1471285788477096007",
+    nome: "Vip | Amor",
+  },
+  {
+    id: "1471285788477096007",
+    nome: "Vip | Amizade",
+  },
+  {
+    id: "1471287737356128286",
+    nome: "Vip | Secreto",
+  },
+  {
+    id: "1471287806071406736",
+    nome: "Vip | Próprio",
+  },
+  {
+    id: "1471287848882667540",
+    nome: "Vip | Leal",
+  },
+  {
+    id: "1471287876359684159",
+    nome: "Vip | Primavera",
+  },
+  {
+    id: "1332549308687581265",
+    nome: "Vip | Verão",
+  },
+  {
+    id: "1332548967220776970",
+    nome: "Vip | Outono",
+  },
+  {
+    id: "1206229310713626664",
+    nome: "Vip | Inverno",
+  },
+  {
+    id: "1141756762547032134",
+    nome: "Vip | Verão 23",
+  },
+  {
+    id: "1149793886722605186",
+    nome: "Vip | BD Endless",
   },
 ];
 export async function executarRoleta(
