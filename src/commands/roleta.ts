@@ -193,7 +193,7 @@ const cargos_vips: Premio[] = [
   },
 ];
 
-const Roleta_cargos = (Cargos: Premio[]) => {
+const Roleta_cargos = (Cargos: Premio[]): Premio => {
   const randomElement = Cargos[Math.floor(Math.random() * Cargos.length)];
   return randomElement;
 };
@@ -287,6 +287,22 @@ export async function executarRoleta(
       }
       await membro.roles.add(premio.cargo_id);
       await interaction.reply(`Parabéns! Conseguiste o cargo ${premio.nome}`);
+      break;
+    case "exclusivo":
+      const temTodosOsCargos = cargos_exclusivo.every(({ id }) =>
+        membro.roles.cache.has(id),
+      );
+
+      if (temTodosOsCargos) {
+        await interaction.reply("Já tens todos os cargos exclusivos da roleta!");
+        return;
+      }
+      let random = Roleta_cargos(cargos_exclusivo);
+      while (!membro.roles.cache.has(random.id)) {
+        let random = Roleta_cargos(cargos_exclusivo);
+      }
+      await membro.roles.add(random.id);
+      await interaction.reply(`Parabéns foi-te atribuido o cargo ${random.nome}`)
       break;
     default:
       console.log(premio.nome);
