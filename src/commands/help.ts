@@ -21,10 +21,15 @@ export async function executarHelp(
       .setThumbnail(interaction.client.user.displayAvatarURL())
       .addFields(
         {
+          name: "Geral",
+          value:
+            "`/help` — Mostra os comandos disponíveis e o que fazem.",
+        },
+        {
           name: "Tickets",
           value:
             "`/ticket` — Tenta obter um ticket com 10% de probabilidade.\n" +
-            "`/stock` — Consulta quantos tickets possuis.",
+            "`/stock [utilizador]` — Consulta os teus tickets ou os de outro utilizador.",
         },
         {
           name: "Roleta",
