@@ -40,7 +40,7 @@ export async function executarStock(
     return
   }
   await interaction.reply({
-    content: `${alvo} possui neste exato momento ${utilizador?.tickets} para girar na roleta.`,
+    content: `${alvo} possui  ${utilizador?.tickets} para girar na roleta.`,
     flags: MessageFlags.Ephemeral,
   });
 }
