@@ -355,7 +355,7 @@ export async function executarRoleta(
       await membro.roles.add(premio.cargo_id);
       if (membro.roles.cache.has(premio.cargo_id)){
         await interaction.editReply(
-          `Já tens o cargo ${premio.nome} (${premio.peso / 1000}%)!`,
+          `Já tens o cargo ${premio.nome} (${premio.peso / 1000}%)`,
         );
         return
       }
