@@ -1,4 +1,4 @@
-import { type ChatInputCommandInteraction, MessageFlags } from "discord.js";
+import { type ChatInputCommandInteraction, MessageFlags, EmbedBuilder } from "discord.js";
 import "dotenv/config";
 
 const { Client: UnbelievaClient } = require("unb-api");
@@ -12,6 +12,9 @@ if (!token) {
 const unb = new UnbelievaClient(token);
 
 import { User } from "../database/database";
+
+
+
 
 export const roletaCommand = {
   name: "roleta",
@@ -310,7 +313,29 @@ export async function executarRoleta(
   }
   if (!interaction.inCachedGuild()) return;
 
-  await interaction.deferReply();
+  const embed = new EmbedBuilder()
+    .setColor(0xff5a00)
+    .setTitle(" Roleta de Halloween")
+    .setDescription("A roleta irá girar. Aguarda 10 segundos!")
+    .setImage("attachment://content.png");
+
+  await interaction.reply({
+    embeds: [embed],
+    files: [
+      {
+        attachment: "./assets/content.png",
+        name: "content.png",
+      },
+    ],
+  });
+
+  await new Promise<void>((resolve) => setTimeout(resolve, 10_000));
+
+  await interaction.editReply({
+    content: "A sortear o teu prémio...",
+    embeds: [],
+    attachments: [],
+  });
 
   const membro = await interaction.guild.members.fetch(interaction.user.id);
   const premio = sortearPremio();
