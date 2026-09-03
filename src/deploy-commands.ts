@@ -7,6 +7,7 @@ import { stockCommand } from "./commands/stock";
 import { ticketCommand } from "./commands/ticket";
 import { helpcommand } from "./commands/help"
 import { removeCommand } from "./commands/remove-tickets"
+import { recompensascommand } from "./commands/recompensas";
 
 const commands = [
   olaCommand,
@@ -15,6 +16,7 @@ const commands = [
   stockCommand,
   addCommand,
   helpcommand,
+  recompensascommand,
   removeCommand,
 ];
 

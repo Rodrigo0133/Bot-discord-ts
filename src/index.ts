@@ -14,6 +14,7 @@ import { executarTicket } from "./commands/ticket";
 import { executarHelp } from "./commands/help";
 import { executarremove } from "./commands/remove-tickets"
 import { ligarBaseDados } from "./database/database";
+import { executarRecompensas } from "./commands/recompensas";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -31,6 +32,7 @@ const commandHandlers: Record<string, CommandHandler> = {
   ticket: executarTicket,
   help: executarHelp,
   remove: executarremove,
+  recompensas: executarRecompensas,
 }; // name of commands
 
 client.on(Events.InteractionCreate, async (interaction) => {
