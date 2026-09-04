@@ -66,7 +66,6 @@ GUILD_ID=id_do_servidor
 UNB_API_TOKEN=token_da_api_unbelievaboat
 ```
 
-O ficheiro `.env` está excluído do Git e não deve ser enviado para o repositório.
 
 Os IDs dos cargos usados nas permissões e nas recompensas pertencem ao servidor para o qual o projeto foi criado. Para usar o bot noutro servidor, é necessário substituir esses IDs em `src/config/constants.ts` e na configuração da roleta.
 
@@ -96,7 +95,7 @@ npm run build
 npm start
 ```
 
-Por predefinição, o bot tenta ligar-se ao MongoDB em `mongodb://127.0.0.1:27017/Discord`.
+Por predefinição, o bot tenta ligar-se ao MongoDB em `mongodb://127.0.0.1:27017/Discord`. Para alterar o nome da base de dados, basta substituir `Discord` pelo nome pretendido.
 
 ## Estrutura do projeto
 
@@ -129,6 +128,10 @@ Esta separação permite que o mesmo utilizador tenha dados diferentes em servid
 
 ## Decisões que tomei durante o desenvolvimento
 
+Escolhi TypeScript não só como forma de aprendizagem, mas também pelas vantagens da tipagem estática.
+
+Escolhi MongoDB por ser a base de dados com que tenho mais experiência e familiaridade.
+
 Usei pesos inteiros na roleta para evitar trabalhar diretamente com vários valores decimais. O sorteio gera um número entre 0 e 99 999 e percorre as recompensas até encontrar o intervalo correspondente.
 
 O cooldown fica guardado na base de dados em vez de existir apenas em memória. Assim, reiniciar o bot não permite contornar o tempo de espera.
@@ -139,13 +142,7 @@ As recompensas monetárias são atribuídas através da API do UnbelievaBoat. As
 
 ## Estado atual
 
-O bot está funcional como projeto pessoal, mas continua em desenvolvimento. Os próximos pontos em que quero trabalhar são:
-
-- terminar a integração do sistema de garantia com o sorteio da roleta
-- mover a ligação do MongoDB e os IDs específicos do servidor para configuração externa
-- reforçar a validação de recompensas quando um membro já possui determinados cargos
-- adicionar testes para o sorteio, cooldown e alteração de tickets
-- melhorar as mensagens de erro e os registos de execução
+Considero o bot concluído dentro dos objetivos que defini para este projeto pessoal.
 
 ## Licença
 
