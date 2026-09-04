@@ -140,6 +140,16 @@ Nos comandos administrativos, a autorização é verificada através dos cargos 
 
 As recompensas monetárias são atribuídas através da API do UnbelievaBoat. As restantes recompensas usam o sistema de cargos do Discord, o que significa que o cargo do bot precisa de estar acima dos cargos que vai atribuir.
 
+## Dificuldades encontradas
+
+Uma das primeiras dificuldades foi compreender o funcionamento do Discord.js e a forma como o bot recebe e responde às interações dos utilizadores.
+
+Também precisei de aprender a separar o registo dos comandos da sua execução e a organizar cada comando no respetivo ficheiro. Outro desafio foi implementar um sorteio baseado em probabilidades sem depender de valores decimais.
+
+## O que aprendi
+
+Este projeto ajudou-me a melhorar os meus conhecimentos de TypeScript, sobretudo na utilização de tipos para detetar erros durante o desenvolvimento. Permitiu-me também compreender melhor o Discord.js, organizar um projeto com vários comandos e trabalhar com variáveis de ambiente para manter dados sensíveis fora do código.
+
 ## Estado atual
 
 Considero o bot concluído dentro dos objetivos que defini para este projeto pessoal.
