@@ -33,7 +33,8 @@ export async function executarHelp(
         },
         {
           name: "Roleta",
-          value: "`/roleta` — Utiliza um ticket para sortear uma recompensa.",
+          value: "`/roleta` — Utiliza um ticket para sortear uma recompensa.\n" +
+          "`/pity` — Consulta o teu contador de Pity.",
         },
       )
       .setFooter({
