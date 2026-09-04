@@ -338,123 +338,167 @@ export async function executarRoleta(
   });
 
   const membro = await interaction.guild.members.fetch(interaction.user.id);
-  const premio = sortearPremio();
+  let premio = sortearPremio();
 
-  switch (premio.id) {
-    case "moedas_5000":
-      await saldoAtualizado(5000,premio.peso);
-      break;
-    case "moedas_100000":
-      await saldoAtualizado(100000, premio.peso);
+  if (membro.roles.cache.has("1541241011752402954")) {
+    utilizador.pity = 0;
+  } else if (membro.roles.cache.has("1416440917803536505")) {
+    if (premio.id === "halloween_26") {
+      utilizador.pity = 0;
+    } else if (utilizador.pity + 1 >= 150) {
+      const premioGarantido = premios.find(
+        ({ id }) => id === "halloween_26",
+      );
 
-      break;
-    case "halloween_24":
-      if (!premio.cargo_id) {
-        throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
+      if (!premioGarantido) {
+        throw new Error("O prémio Halloween 26 não está configurado");
       }
-      await membro.roles.add(premio.cargo_id);
-      if (membro.roles.cache.has(premio.cargo_id)){
-        await interaction.editReply(
-          `Já tens o cargo ${premio.nome} (${premio.peso / 1000}%)`,
-        );
-        return
+
+      premio = {
+        ...premioGarantido,
+        nome: `${premioGarantido.nome}, graças ao sistema de Pity após 150 tentativas`,
+      };
+      utilizador.pity = 0;
+    } else {
+      utilizador.pity += 1;
+    }
+  } else if (membro.roles.cache.has("1290704724110348299")) {
+    if (premio.id === "halloween_25") {
+      utilizador.pity = 0;
+    } else if (utilizador.pity + 1 >= 200) {
+      const premioGarantido = premios.find(
+        ({ id }) => id === "halloween_25",
+      );
+
+      if (!premioGarantido) {
+        throw new Error("O prémio Halloween 25 não está configurado");
       }
+
+      premio = {
+        ...premioGarantido,
+        nome: `${premioGarantido.nome}, graças ao sistema de Pity após 200 tentativas`,
+      };
+      utilizador.pity = 0;
+    } else {
+      utilizador.pity += 1;
+    }
+  }
+
+    switch (premio.id) {
+      case "moedas_5000":
+        await saldoAtualizado(5000, premio.peso);
+        break;
+      case "moedas_100000":
+        await saldoAtualizado(100000, premio.peso);
+
+        break;
+      case "halloween_24":
+        if (!premio.cargo_id) {
+          throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
+        }
+        await membro.roles.add(premio.cargo_id);
+        if (membro.roles.cache.has(premio.cargo_id)) {
+          await interaction.editReply(
+            `Já tens o cargo ${premio.nome} (${premio.peso / 1000}%)`,
+          );
+          return;
+        }
         await interaction.editReply(
           `Parabéns! Conseguiste o cargo ${premio.nome} (${premio.peso / 1000}%)`,
         );
-      break;
-    case "halloween_25":
-      if (!premio.cargo_id) {
-        throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
-      }
-      if (membro.roles.cache.has(premio.cargo_id)) {
-        await interaction.editReply(
-          `Já tens o cargo ${premio.nome} (${premio.peso / 1000}%)`,
-        );
-        return;
-      }
-      await membro.roles.add(premio.cargo_id);
-
-      await interaction.editReply(
-        `Parabéns! Conseguiste o cargo ${premio.nome} (${premio.peso / 1000}%)`,
-      );
-      break;
-    case "halloween_26":
-      if (!premio.cargo_id) {
-        throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
-      }
-      if (membro.roles.cache.has(premio.cargo_id)) {
-        await interaction.editReply(
-          `Já tens o cargo ${premio.nome} (${premio.peso / 1000}%) `,
-        );
-        return;
-      }
-      await membro.roles.add(premio.cargo_id);
-      await interaction.editReply(
-        `Parabéns! Conseguiste o cargo ${premio.nome} (${premio.peso / 1000}%)`,
-      );
-      break;
-    case "exclusivo":
-      const temTodosOsCargos = cargos_exclusivo.every(({ id }) =>
-        membro.roles.cache.has(id),
-      );
-
-      if (temTodosOsCargos) {
-        await interaction.editReply(
-          `Já tens todos os cargos exclusivos da roleta (${premio.peso / 1000}%)`,
-        );
-        return;
-      }
-      let random = Roleta_cargos(cargos_exclusivo);
-      while (membro.roles.cache.has(random.id)) {
-        random = Roleta_cargos(cargos_exclusivo);
-      }
-      await membro.roles.add(random.id);
-      await interaction.editReply(
-        `Parabéns foi-te atribuido o cargo ${random.nome} (${premio.peso / 1000}%)`,
-      );
-      break;
-    case "vip":
-      const temTodosOsCargos2 = cargos_vips.every(({ id }) =>
-        membro.roles.cache.has(id),
-      );
-
-      if (temTodosOsCargos2) {
-        await interaction.editReply(
-          `Já tens todos os cargos vips da roleta (${premio.peso / 1000}%)`,
-        );
-        return;
-      }
-      let random2 = Roleta_cargos(cargos_vips);
-      while (membro.roles.cache.has(random2.id)) {
-        random2 = Roleta_cargos(cargos_vips);
-      }
-      await membro.roles.add(random2.id);
-      await interaction.editReply(
-        `Parabéns foi-te atribuido o cargo ${random2.nome} (${premio.peso / 1000}%)`,
-      );
-      break;
-    case "level":
-      for (let i = 0; i < cargos_level.length; i++) {
-        if (!membro.roles.cache.has(cargos_level[i].id)) {
-          await membro.roles.add(cargos_level[i].id);
-          await interaction.editReply(
-            `Parabéns! Conseguiste o cargo ${cargos_level[i].nome} (${premio.peso / 1000}%)`,
-          );
-          break;
+        break;
+      case "halloween_25":
+        if (!premio.cargo_id) {
+          throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
         }
-      }
-      await interaction.editReply(
-        `Já tens todos os cargos level (${premio.peso / 1000}%)`,
-      );
-      break;
-    case "moedas_10000":
-      await saldoAtualizado(10000, premio.peso);
-      break;
-    default:
-      console.log(premio.nome);
-      break;
-  }
+        if (membro.roles.cache.has(premio.cargo_id)) {
+          await interaction.editReply(
+            `Já tens o cargo ${premio.nome} (${premio.peso / 1000}%)`,
+          );
+          return;
+        }
+        await membro.roles.add(premio.cargo_id);
+
+        await interaction.editReply(
+          `Parabéns! Conseguiste o cargo ${premio.nome} (${premio.peso / 1000}%)`,
+        );
+        break;
+      case "halloween_26":
+        if (!premio.cargo_id) {
+          throw new Error(`O prémio ${premio.id} não tem cargo configurado`);
+        }
+        if (membro.roles.cache.has(premio.cargo_id)) {
+          await interaction.editReply(
+            `Já tens o cargo ${premio.nome} (${premio.peso / 1000}%) `,
+          );
+          return;
+        }
+        await membro.roles.add(premio.cargo_id);
+        await interaction.editReply(
+          `Parabéns! Conseguiste o cargo ${premio.nome} (${premio.peso / 1000}%)`,
+        );
+        break;
+      case "exclusivo":
+        const temTodosOsCargos = cargos_exclusivo.every(({ id }) =>
+          membro.roles.cache.has(id),
+        );
+
+        if (temTodosOsCargos) {
+          await interaction.editReply(
+            `Já tens todos os cargos exclusivos da roleta (${premio.peso / 1000}%)`,
+          );
+          return;
+        }
+        let random = Roleta_cargos(cargos_exclusivo);
+        while (membro.roles.cache.has(random.id)) {
+          random = Roleta_cargos(cargos_exclusivo);
+        }
+        await membro.roles.add(random.id);
+        await interaction.editReply(
+          `Parabéns foi-te atribuido o cargo ${random.nome} (${premio.peso / 1000}%)`,
+        );
+        break;
+      case "vip":
+        const temTodosOsCargos2 = cargos_vips.every(({ id }) =>
+          membro.roles.cache.has(id),
+        );
+
+        if (temTodosOsCargos2) {
+          await interaction.editReply(
+            `Já tens todos os cargos vips da roleta (${premio.peso / 1000}%)`,
+          );
+          return;
+        }
+        let random2 = Roleta_cargos(cargos_vips);
+        while (membro.roles.cache.has(random2.id)) {
+          random2 = Roleta_cargos(cargos_vips);
+        }
+        await membro.roles.add(random2.id);
+        await interaction.editReply(
+          `Parabéns foi-te atribuido o cargo ${random2.nome} (${premio.peso / 1000}%)`,
+        );
+        break;
+      case "level":
+        for (let i = 0; i < cargos_level.length; i++) {
+          if (!membro.roles.cache.has(cargos_level[i].id)) {
+            await membro.roles.add(cargos_level[i].id);
+            await interaction.editReply(
+              `Parabéns! Conseguiste o cargo ${cargos_level[i].nome} (${premio.peso / 1000}%)`,
+            );
+            break;
+          }
+        }
+        await interaction.editReply(
+          `Já tens todos os cargos level (${premio.peso / 1000}%)`,
+        );
+        break;
+      case "moedas_10000":
+        await saldoAtualizado(10000, premio.peso);
+        break;
+      default:
+        console.log(premio.nome);
+        break;
+    }
   utilizador.tickets -= 1;
   await utilizador.save();
 }

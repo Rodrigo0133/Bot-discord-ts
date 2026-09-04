@@ -26,6 +26,11 @@ const userSchema = new Schema({
     default: 0,
     min: 0,
   },
+  pity:{
+    type: Number,
+    default: 0,
+    min: 0,
+  }
 });
 
 export const User = model("User", userSchema);
