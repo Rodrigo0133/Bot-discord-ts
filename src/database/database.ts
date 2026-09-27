@@ -1,7 +1,12 @@
 import { Schema, model, connect } from "mongoose";
-
 export async function ligarBaseDados() {
-  await connect("mongodb://127.0.0.1:27017/Discord");
+  const mongoUri = process.env.MONGODB_URI;
+
+  if (!mongoUri) {
+    throw new Error("MONGODB_URI não definida.");
+  }
+
+  await connect(mongoUri);
   console.log("MongoDB ligado");
 }
 

@@ -54,7 +54,9 @@ client.on(Events.InteractionCreate, async (interaction) => {
       flags: MessageFlags.Ephemeral,
     } as const;
 
-    if (interaction.replied || interaction.deferred) {
+    if (interaction.deferred && !interaction.replied) {
+      await interaction.editReply("Ocorreu um erro ao executar este comando.");
+    } else if (interaction.replied) {
       await interaction.followUp(resposta);
     } else {
       await interaction.reply(resposta);
