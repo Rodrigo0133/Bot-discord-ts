@@ -35,6 +35,11 @@ const userSchema = new Schema({
     type: Number,
     default: 0,
     min: 0,
+  },
+  totalticketscomprado:{
+    type: Number,
+    default: 0,
+    min: 0,
   }
 });
 

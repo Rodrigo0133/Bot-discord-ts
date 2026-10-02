@@ -43,11 +43,9 @@ export async function executarTicket(
 
   if (tempoRestante > 0) {
     const totalMinutos = Math.ceil(tempoRestante / 60_000);
-    const horas = Math.floor(totalMinutos / 60);
-    const minutos = totalMinutos % 60;
 
     await interaction.reply({
-      content: `Tens de esperar mais ${horas} hora(s) e ${minutos} minuto(s).`,
+      content: `Tens de esperar mais ${totalMinutos} minuto(s).`,
       flags: MessageFlags.Ephemeral,
     });
     return;
