@@ -9,6 +9,7 @@ import { helpcommand } from "./commands/help"
 import { removeCommand } from "./commands/remove-tickets"
 import { recompensascommand } from "./commands/recompensas";
 import { pityCommand } from "./commands/pity";
+import { buyTicketCommand } from "./commands/buy-ticket";
 
 const commands = [
   olaCommand,
@@ -20,6 +21,7 @@ const commands = [
   recompensascommand,
   removeCommand,
   pityCommand,
+  buyTicketCommand,
 ];
 
 async function registarComandos(): Promise<void> {
