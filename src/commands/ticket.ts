@@ -8,7 +8,7 @@ import { User } from "../database/database";
 export const ticketCommand = {
   name: "ticket",
   description:
-    "Tenta obter um ticket para girar na roleta, com uma chance de 10%",
+    "Tenta obter um ticket para girar na roleta, com uma chance de 50%",
 };
 
 export async function executarTicket(
@@ -42,16 +42,17 @@ export async function executarTicket(
   const tempoRestante = COOLDOWN_TICKET_MS - tempoPassado;
 
   if (tempoRestante > 0) {
-    const totalMinutos = Math.ceil(tempoRestante / 60_000);
-
+    const minutosArredondados = Math.ceil(tempoRestante / 60_000);
+    const totalHoras = Math.floor(minutosArredondados / 60);
+    const totalMinutos = minutosArredondados % 60;
     await interaction.reply({
-      content: `Tens de esperar mais ${totalMinutos} minuto(s).`,
+      content: `Tens de esperar mais ${totalHoras} hora(s) e ${totalMinutos} minuto(s).`,
       flags: MessageFlags.Ephemeral,
     });
     return;
   }
 
-  const ganhouTicket = Math.random() < 0.1;
+  const ganhouTicket = Math.random() < 0.5;
 
   if (ganhouTicket) {
     utilizador.tickets += 1;
