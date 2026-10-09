@@ -1,18 +1,4 @@
 services:
-  mongodb:
-    image: mongodb/mongodb-atlas-local
-    hostname: mongodb
-    container_name: DB_gestordedespesas
-    environment:
-      - MONGODB_INITDB_ROOT_USERNAME=${MONGODB_INITDB_ROOT_USERNAME}
-      - MONGODB_INITDB_ROOT_PASSWORD=${MONGODB_INITDB_ROOT_PASSWORD}
-    ports:
-      - "27017:27017"
-    volumes:
-      - db:/data/db
-      - configdb:/data/configdb
-      - mongot:/data/mongot
-    restart: always
   bot:
     build: .
     container_name: bot_Discord
@@ -22,11 +8,4 @@ services:
       - GUILD_ID=${GUILD_ID}
       - UNB_API_TOKEN=${UNB_API_TOKEN}
       - MONGODB_URI=${MONGODB_URI}
-    depends_on:
-      - mongodb
     restart: always
-
-volumes:
-  db:
-  configdb:
-  mongot:
