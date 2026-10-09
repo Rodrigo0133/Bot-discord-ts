@@ -299,7 +299,6 @@ export async function executarRoleta(
   }
 
   await interaction.deferReply();
-
   const quantidade = interaction.options.getInteger("quantidade") ?? 1;
   const utilizador = await User.findOne({
     userId: interaction.user.id,

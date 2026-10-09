@@ -21,11 +21,6 @@ const unb = new UnbelievaClient(token);
 export const buyTicketCommand = {
   name: "buy-ticket",
   description: "Compra tickets para um utilizador",
-  options: [
-    {
-      type: 1,
-      name: "ticket",
-      description: "Compra tickets para um utilizador",
       options: [
         {
           type: 4,
@@ -35,9 +30,7 @@ export const buyTicketCommand = {
           min_value: 1,
         },
       ],
-    },
-  ],
-};
+    }
 export async function executarBuyTicket(
   interaction: ChatInputCommandInteraction,
 ): Promise<void> {
@@ -76,15 +69,14 @@ export async function executarBuyTicket(
       guildId: guildId ?? undefined,
     });
   }
-
+  const compradoAntes = user.totalticketscomprado ?? 0;
+  const total = Math.round(
+    20000 *
+      (quantidade +
+        PERCENTAGEM_AUMENTADA *
+          (quantidade * compradoAntes + (quantidade * (quantidade - 1)) / 2)),
+  );
   try {
-    const compradoAntes = user.totalticketscomprado ?? 0;
-    const total = Math.round(
-      20000 *
-        (quantidade +
-          PERCENTAGEM_AUMENTADA *
-            (quantidade * compradoAntes + (quantidade * (quantidade - 1)) / 2)),
-    );
     const saldo = await unb.getUserBalance(
       interaction.guildId,
       interaction.user.id,
@@ -109,7 +101,7 @@ export async function executarBuyTicket(
   } catch (error) {
     if (error instanceof UtilizadorNaoEncontradoError) {
       await interaction.editReply({
-        content: "Não tens saldo suficiente para comprar os tickets.",
+        content: `Não tens saldo suficiente para comprar os tickets, Valor que precisavas de pagar ${total}€`,
       });
     } else {
       console.error("Erro ao comprar tickets:", error);
