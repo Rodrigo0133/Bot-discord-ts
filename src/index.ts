@@ -17,6 +17,7 @@ import { ligarBaseDados } from "./database/database";
 import { executarRecompensas } from "./commands/recompensas";
 import { executarPity } from "./commands/pity";
 import { executarBuyTicket } from "./commands/buy-ticket";
+import { registarComando } from "./utils/registar-comando";
 
 const client = new Client({
   intents: [GatewayIntentBits.Guilds],
@@ -46,9 +47,11 @@ client.on(Events.InteractionCreate, async (interaction) => {
 
   if (!executarComando) return;
 
+  let ocorreuErro = false;
   try {
     await executarComando(interaction);
   } catch (error) {
+    ocorreuErro = true;
     console.error(`Erro no comando /${interaction.commandName}:`, error);
 
     const resposta = {
@@ -63,6 +66,8 @@ client.on(Events.InteractionCreate, async (interaction) => {
     } else {
       await interaction.reply(resposta);
     }
+  } finally {
+    await registarComando(interaction, ocorreuErro);
   }
 });
 // ----- turn on bot & Database ---------
