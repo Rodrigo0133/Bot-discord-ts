@@ -8,4 +8,5 @@ services:
       - GUILD_ID=${GUILD_ID}
       - UNB_API_TOKEN=${UNB_API_TOKEN}
       - MONGODB_URI=${MONGODB_URI}
+      - WEBHOOK_URL=${WEBHOOK_URL}
     restart: always
