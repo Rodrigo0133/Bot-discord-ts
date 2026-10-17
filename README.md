@@ -37,6 +37,9 @@ O projeto inclui ainda comandos para consultar o saldo de tickets e para permiti
 
 ## Como executar o projeto
 
+O ZIP de deploy da branch `2x-de-sorte` inclui o ficheiro `DEPLOY.md`, com
+configuração, execução com Node.js ou Docker e probabilidades antes/depois.
+
 ### Requisitos
 
 Antes de começar, é necessário ter:
@@ -64,6 +67,8 @@ DISCORD_TOKEN=token_do_bot
 CLIENT_ID=id_da_aplicacao
 GUILD_ID=id_do_servidor
 UNB_API_TOKEN=token_da_api_unbelievaboat
+MONGODB_URI=mongodb://127.0.0.1:27017/Discord
+WEBHOOK_URL=
 ```
 
 
@@ -95,7 +100,9 @@ npm run build
 npm start
 ```
 
-Por predefinição, o bot tenta ligar-se ao MongoDB em `mongodb://127.0.0.1:27017/Discord`. Para alterar o nome da base de dados, basta substituir `Discord` pelo nome pretendido.
+Define obrigatoriamente `MONGODB_URI` no `.env`. Para MongoDB local, podes usar
+`mongodb://127.0.0.1:27017/Discord`; substitui `Discord` pelo nome da base de
+dados pretendida. `WEBHOOK_URL` é opcional e ativa o registo dos comandos.
 
 ## Estrutura do projeto
 

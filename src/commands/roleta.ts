@@ -1,5 +1,6 @@
 import { type ChatInputCommandInteraction, MessageFlags, EmbedBuilder } from "discord.js";
 import "dotenv/config";
+import { premios, sortearPremio } from "../config/premios-roleta";
 
 const { Client: UnbelievaClient } = require("unb-api");
 
@@ -31,32 +32,6 @@ export const roletaCommand = {
     ]
 };
 
-const premios = [
-  { id: "moedas_5000", nome: "5000 Moedas", peso: 38_000 },
-  { id: "moedas_10000", nome: "10000 Moedas", peso: 20_000 },
-  { id: "level", nome: "+1 Cargo de Level", peso: 14_000 },
-  {
-    id: "halloween_24",
-    nome: "Cargo Halloween 24",
-    cargo_id: "1290704724110348299",
-    peso: 10_000,
-  },
-  { id: "vip", nome: "Vip sorteado", peso: 7_000 },
-  { id: "exclusivo", nome: "Cargo Exclusivo", peso: 5_000 },
-  {
-    id: "halloween_25",
-    nome: "Cargo Halloween 25",
-    cargo_id: "1416440917803536505",
-    peso: 3_000,
-  },
-  { id: "moedas_100000", nome: "100000 Moedas", peso: 2_000 },
-  {
-    id: "halloween_26",
-    nome: "Cargo Halloween 26",
-    cargo_id: "1541241011752402954",
-    peso: 1_000,
-  },
-];
 
 interface Premio {
   id: string;
@@ -501,19 +476,4 @@ export async function executarRoleta(
       .map((resultado, indice) => `> ${indice + 1}. ${resultado}`)
       .join("\n")}`,
   });
-}
-function sortearPremio() {
-  const numeroSorteado = Math.floor(Math.random() * 100_000);
-  
-  let acumulado = 0;
-
-  for (const premio of premios) {
-    acumulado += premio.peso;
-
-    if (numeroSorteado < acumulado) {
-      return premio;
-    }
-  }
-
-  throw new Error("Nenhum prémio foi sorteado");
 }

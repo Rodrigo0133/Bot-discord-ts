@@ -1,6 +1,8 @@
 services:
   bot:
-    build: .
+    build:
+      context: .
+      dockerfile: dockerfile
     container_name: bot_Discord
     environment:
       - DISCORD_TOKEN=${DISCORD_TOKEN}
