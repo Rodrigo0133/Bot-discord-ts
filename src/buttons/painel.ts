@@ -1,3 +1,4 @@
+import { entrar } from './entrar';
 import { ButtonStyle, MessageFlags, type ButtonInteraction } from 'discord.js';
 
 export const opcoes = [
@@ -16,6 +17,11 @@ export function idBotao(id: string) {
 }
 
 export async function responderAoBotao(interacao: ButtonInteraction) {
+  if (interacao.customId === idBotao('entrar')) {
+    await entrar(interacao);
+    return;
+  }
+
   const opcao = opcoes.find(item => idBotao(item.id) === interacao.customId);
   if (opcao) {
     await interacao.reply({
