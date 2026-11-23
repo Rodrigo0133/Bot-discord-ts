@@ -1,8 +1,7 @@
 ﻿import mongoose from 'mongoose';
 
 export async function ligarBaseDados() {
-  const uri = process.env.MONGODB_URI;
-  if (!uri) throw new Error('Falta configurar MONGODB_URI.');
+  const uri = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/bot-natal';
   await mongoose.connect(uri);
 }
 
