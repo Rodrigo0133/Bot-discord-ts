@@ -10,6 +10,7 @@ const Plantacao = model('PlantacaoNatal', new Schema({
   _id: { type: String, required: true },
   aberta: String,
   saldos: { type: Map, of: Number },
+  totalGanho: { type: Map, of: Number },
   pendentes: [premio],
 }));
 
@@ -25,11 +26,19 @@ export function abrirColheitas(canal: string) {
 
     async colher(mensagem: string, membro: string, cenouras: number) {
       // Reservar a colheita e creditar o saldo são uma única escrita no MongoDB.
-      const resultado = await Plantacao.updateOne({ _id: canal, aberta: mensagem }, {
-        $unset: { aberta: 1 },
-        $inc: { [`saldos.${membro}`]: cenouras },
-        $push: { pendentes: { mensagem, membro, cenouras } },
-      });
+      const saldo = `saldos.${membro}`;
+      const total = `totalGanho.${membro}`;
+      // Antes da loja, todo o saldo existente vinha de ganhos da plantação.
+      const saldoAnterior = { $ifNull: [`$${saldo}`, 0] };
+      const ganhoAnterior = { $ifNull: [`$${total}`, saldoAnterior] };
+      const resultado = await Plantacao.updateOne({ _id: canal, aberta: mensagem }, [
+        { $set: {
+          [saldo]: { $add: [saldoAnterior, cenouras] },
+          [total]: { $add: [ganhoAnterior, cenouras] },
+          pendentes: { $concatArrays: [{ $ifNull: ['$pendentes', []] }, [{ mensagem, membro, cenouras }]] },
+        } },
+        { $unset: 'aberta' },
+      ], { updatePipeline: true });
       return resultado.modifiedCount === 1;
     },
 
@@ -41,5 +50,13 @@ export function abrirColheitas(canal: string) {
     async marcarAnunciada(mensagem: string) {
       await Plantacao.updateOne({ _id: canal }, { $pull: { pendentes: { mensagem } } });
     },
+  };
+}
+
+export async function consultarSaldos(canal: string) {
+  const plantacao = await Plantacao.findById(canal, { saldos: 1, totalGanho: 1 });
+  return {
+    saldos: plantacao?.saldos ?? new Map<string, number>(),
+    totais: plantacao?.totalGanho ?? new Map<string, number>(),
   };
 }
