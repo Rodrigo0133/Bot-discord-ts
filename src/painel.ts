@@ -1,13 +1,15 @@
 import { join } from 'node:path';
 import {
-  AttachmentBuilder, ChannelType, ComponentType, ContainerBuilder, MessageFlags,
+  AttachmentBuilder, ButtonStyle, ChannelType, ComponentType, ContainerBuilder, MessageFlags,
   type Client, type Message, type TextChannel,
 } from 'discord.js';
 import { idBotao, opcoes } from './buttons/painel';
 
+import { canalPlantacao } from './buttons/plantacao';
+
 export const canalId = '1416179242496032798';
 
-export function criarPainel() {
+export function criarPainel(servidor: string) {
   const caixa = new ContainerBuilder().setAccentColor(0xad6f40);
   const files: AttachmentBuilder[] = [];
   function adicionarImagem(nome: string, descricao: string) {
@@ -30,8 +32,13 @@ export function criarPainel() {
       .addTextDisplayComponents(texto => texto.setContent(
         `${opcao.icone} **${indice + 1}º · ${opcao.titulo}**\n${opcao.descricao}`,
       ))
-      .setButtonAccessory(botao => botao.setCustomId(idBotao(opcao.id))
-        .setLabel(opcao.botao).setEmoji({ name: opcao.emoji }).setStyle(opcao.estilo)));
+      .setButtonAccessory(botao => {
+        botao.setLabel(opcao.botao).setEmoji({ name: opcao.emoji });
+        if (opcao.id === 'plantacao') {
+          return botao.setStyle(ButtonStyle.Link).setURL(`https://discord.com/channels/${servidor}/${canalPlantacao}`);
+        }
+        return botao.setCustomId(idBotao(opcao.id)).setStyle(opcao.estilo);
+      }));
   }
   return { components: [caixa], flags: MessageFlags.IsComponentsV2 as const, files, allowedMentions: { parse: [] } };
 }
@@ -56,7 +63,7 @@ export async function publicarPainel(cliente: Client<true>) {
   const canal = await cliente.channels.fetch(canalId);
   if (canal?.type !== ChannelType.GuildText) throw new Error('Canal de texto do evento indisponível.');
   const anterior = await procurarPainel(canal, cliente.user.id);
-  const painel = criarPainel();
+  const painel = criarPainel(canal.guildId);
   const mensagem = anterior
     ? await anterior.edit({ ...painel, attachments: [] })
     : await canal.send(painel);

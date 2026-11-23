@@ -1,9 +1,9 @@
 # Regras do projeto
 
-- Desenvolve o bot de Natal na branch `bot-natal`, em TypeScript com `discord.js`. Mantém o arranque em `src/index.ts` e a lógica dos botões em `src/buttons/`.
+- Desenvolve o bot de Natal na branch `bot-natal`, em TypeScript com `discord.js`. Mantém o arranque em `src/index.ts` e a lógica dos botões em `src/buttons/`. Concentra a ligação, modelos e operações do MongoDB em `src/db/`, usando Mongoose.
 - Antes de executar uma instalação com npm, indica os pacotes envolvidos, explica o que fazem e por que são necessários para o pedido. Aguarda autorização explícita do utilizador. Esta regra inclui dependências de desenvolvimento.
 - Faz um commit local por cada alteração lógica concluída e verificada.
-- Implementa apenas a funcionalidade pedida. Se faltar uma regra do evento, um ID ou outra decisão que altere o comportamento, pergunta ao utilizador.
+- Implementa apenas a funcionalidade pedida. Quando tiveres qualquer dúvida, mesmo que pareça trivial, pergunta ao programador antes de assumir uma regra ou inventar funcionalidades.
 - Segue o exemplo visual e usa as imagens fornecidas. Ao arrancar, o bot deve reutilizar o painel existente no canal configurado. As confirmações privadas dos botões aparecem no próprio canal através de respostas efémeras.
 - Se uma tentativa falhar, remove o que criaste nessa tentativa quando fizer sentido. Preserva o trabalho anterior do utilizador.
 

@@ -1,6 +1,6 @@
 ﻿import { MessageFlags, type ButtonInteraction } from 'discord.js';
 
-const cargoParticipante = '1564057294696616117';
+export const cargoParticipante = '1564057294696616117';
 
 export async function entrar(interacao: ButtonInteraction) {
   await interacao.deferReply({ flags: MessageFlags.Ephemeral });
