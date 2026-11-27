@@ -2,6 +2,12 @@
 
 Bot de Discord da LCN, desenvolvido em TypeScript na branch `bot-natal`. O painel dá acesso às atividades do evento. As cenouras ganhas na plantação ficam guardadas no MongoDB.
 
+## Fluxo de trabalho no GitHub
+
+1. Antes de cada alteração, lê este README e executa `git pull --ff-only origin bot-natal` na branch `bot-natal`. Se o pull atualizar o README, relê-o.
+2. Verifica a alteração e faz um commit por cada alteração lógica concluída.
+3. Logo após cada commit, executa `git push origin bot-natal` para publicar todos os commits locais pendentes da branch. Confirma que o push terminou com sucesso. Se houver um bloqueio, comunica-o.
+
 ## Estado atual
 
 O levantamento compara as três fotografias do caderno com o código em `ce12827`. O `git pull` confirmou que esse era também o commit mais recente de `origin/bot-natal` no momento da verificação.
