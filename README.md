@@ -12,7 +12,7 @@ O levantamento compara as três fotografias do caderno com o código em `ce12827
 | 1. Participar | Implementado no código | Atribui o cargo de participante e confirma no mesmo canal com uma resposta efémera. Se o membro já tiver o cargo, recebe uma mensagem a indicá-lo. O acesso aos outros canais depende das permissões configuradas no Discord. |
 | 2. Plantação | Implementado no código | O botão abre o canal da plantação. Há uma colheita no arranque e novas colheitas a intervalos aleatórios de 30 a 180 minutos. Só um participante, o primeiro a reclamar a colheita, recebe entre 100 e 1000 cenouras. O anúncio público aparece depois de 10 segundos. O MongoDB guarda o saldo e permite recuperar anúncios pendentes no arranque. |
 | 3. Coleção | Parcial | Mostra saldo, boosts e ranking numa resposta efémera aos participantes. O ranking usa o saldo atual e, em caso de empate, o total ganho e a antiguidade no servidor. O campo de boosts mostra sempre «Nenhum». |
-| 4. Loja | Pendente | O botão mostra uma mensagem de teste. |
+| 4. Loja | Parcial | Abre um catálogo efémero com sete artigos, separadores e botões de preço com o emoji do evento. Os botões de compra estão desativados. |
 | 5. Rena | Pendente | O botão mostra uma mensagem de teste. |
 | 6. Querido Pai Natal… | Pendente | O botão mostra uma mensagem de teste. |
 | 7. Missões Diárias | Pendente | O botão mostra uma mensagem de teste. |
@@ -21,7 +21,9 @@ O levantamento compara as três fotografias do caderno com o código em `ce12827
 ## Próximos passos
 
 1. **Validar o que já existe.** Num servidor de teste, confirmar que o bot reutiliza o painel após reiniciar, que o cargo abre os canais previstos e que o segundo clique em **Entrar** recebe uma resposta privada. Testar dois cliques na mesma colheita, confirmar que só há um crédito e verificar o saldo e o ranking na coleção.
-2. **Loja.** Mostrar o catálogo numa resposta efémera e permitir compras em cenouras. O esboço indica cargos de Natal antigos, cargos de nível e o cargo Xmas26. Confirmar o catálogo completo, os preços, os cargos e as condições de compra antes de implementar o débito e a entrega.
+2. **Loja.** Implementar o débito em cenouras e a entrega dos artigos do catálogo. Se o membro já tiver um cargo do pacote, recusar a compra sem cobrar e explicar o motivo. Falta a lista de IDs dos cargos de Level incluídos.
+   - **Boosts por concluir.** Podem ser comprados várias vezes e acumulam efeitos. Por agora, a duração definida é permanente, sem expiração. Rever esta regra e confirmar o cálculo da acumulação antes de fechar a funcionalidade.
+   - **Pets por concluir.** Criar o catálogo e o inventário neste bot, com nome, raridade e nível, e ligar a escolha e a subida ao nível 10 à Loja e ao `/pet-manage`. Os pets e as percentagens iniciais serão provisórios e devem ser revistos quando o catálogo definitivo estiver disponível.
 3. **Rena.** Mostrar um painel efémero com a imagem da rena, o saldo do membro, as cenouras que já deu e botões para a alimentar. Debitar as cenouras, guardar o total por participante e apurar quem mais contribuiu para atribuir as recompensas, incluindo o cargo Xmas26. Confirmar os valores dos botões, a imagem, a data de apuramento, as recompensas e a regra de desempate.
 4. **Querido Pai Natal…** Permitir que o participante escreva uma carta e escolha uma prenda para o dia de Natal. O painel atual anuncia uma única carta por participante. Confirmar as prendas disponíveis e como e quando a entrega deve ocorrer.
 5. **Missões Diárias.** Mostrar as missões, acompanhar o progresso e atribuir o bónus em cenouras. Confirmar as tarefas, as recompensas e a hora de renovação.
