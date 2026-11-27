@@ -68,4 +68,5 @@ export async function publicarPainel(cliente: Client<true>) {
     ? await anterior.edit({ ...painel, attachments: [] })
     : await canal.send(painel);
   console.log(`Painel disponível em ${mensagem.url}`);
+  return canal.guild;
 }

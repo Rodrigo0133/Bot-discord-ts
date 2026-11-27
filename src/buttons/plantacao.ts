@@ -59,6 +59,7 @@ export function criarPlantacao() {
       creditada: `Colheste **${cenouras} cenouras**! 🥕`,
       repetida: 'Já colheste nesta colheita.',
       encerrada: 'Esta colheita já terminou.',
+      limite: 'Esta colheita ultrapassaria o teu limite de cenouras.',
     };
     await interacao.editReply(respostas[resultado]);
   }

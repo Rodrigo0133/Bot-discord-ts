@@ -24,6 +24,10 @@ O levantamento compara as três fotografias do caderno com o código em `ce12827
 | 7. Missões Diárias | Pendente | O botão mostra uma mensagem de teste. |
 | 8. Converter Moedas | Pendente | O botão mostra uma mensagem de teste. |
 
+## Comando de administração
+
+`/add-carrots pessoa:@membro quantidade:500` adiciona a quantidade indicada ao saldo e ao total ganho usado no ranking. As duas opções são obrigatórias e a quantidade deve ser um inteiro positivo. Só membros com o cargo `1542627361550508132` podem executar o comando. O bot regista-o no servidor do evento ao arrancar e responde em privado a quem o executa.
+
 ## Próximos passos
 
 1. **Validar o que já existe.** Num servidor de teste, confirmar que o bot reutiliza o painel após reiniciar, que o cargo abre os canais previstos e que o segundo clique em **Entrar** recebe uma resposta privada. Confirmar que dois participantes conseguem colher na mesma mensagem, que cada um recebe apenas um crédito e que uma mensagem anterior não permite colher. Verificar o saldo e o ranking na coleção.

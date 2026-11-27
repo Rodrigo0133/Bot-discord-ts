@@ -2,6 +2,7 @@ import { ligarBaseDados, desligarBaseDados } from './db/ligacao';
 import { loadEnvFile } from 'node:process';
 import { Client, Events, GatewayIntentBits } from 'discord.js';
 import { responderAoBotao } from './buttons/painel';
+import { comandoAdicionarCenouras, executarAdicionarCenouras } from './commands/add-carrots';
 import { canalId, publicarPainel } from './painel';
 
 import { botaoColher, canalPlantacao, criarPlantacao } from './buttons/plantacao';
@@ -13,9 +14,16 @@ try {
   if ((erro as NodeJS.ErrnoException).code !== 'ENOENT') throw erro;
 }
 const cliente = new Client({ intents: [GatewayIntentBits.Guilds] });
+let servidorEvento: string | undefined;
 
 cliente.once(Events.ClientReady, bot => {
-  publicarPainel(bot).then(() => plantacao.iniciar(bot)).catch(erro => {
+  publicarPainel(bot).then(async servidor => {
+    await plantacao.iniciar(bot);
+    servidorEvento = servidor.id;
+    await servidor.commands.create(comandoAdicionarCenouras).catch(erro => {
+      console.error('Falha ao registar /add-carrots.', erro);
+    });
+  }).catch(erro => {
     console.error('Falha ao iniciar o evento.', erro.message);
     cliente.destroy();
     void desligarBaseDados();
@@ -24,6 +32,12 @@ cliente.once(Events.ClientReady, bot => {
 });
 
 cliente.on(Events.InteractionCreate, interacao => {
+  if (interacao.isChatInputCommand()) {
+    if (interacao.guildId === servidorEvento && interacao.commandName === comandoAdicionarCenouras.name) {
+      executarAdicionarCenouras(interacao).catch(erro => console.error('Falha ao executar /add-carrots.', erro));
+    }
+    return;
+  }
   if (!interacao.isButton()) return;
   if (interacao.channelId === canalPlantacao && interacao.customId === botaoColher) {
     plantacao.colher(interacao).catch(erro => console.error('Falha na colheita.', erro.message));

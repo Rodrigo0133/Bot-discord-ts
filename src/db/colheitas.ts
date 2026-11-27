@@ -14,6 +14,29 @@ const Plantacao = model('PlantacaoNatal', new Schema({
   comprasCargos: { type: Map, of: compraCargo },
 }));
 
+function calcularCredito(membro: string, quantidade: number) {
+  const saldo = `saldos.${membro}`;
+  const total = `totalGanho.${membro}`;
+  const saldoAnterior = { $ifNull: [`$${saldo}`, 0] };
+  // Nos registos antigos, o saldo também representava o total ganho.
+  const ganhoAnterior = { $ifNull: [`$${total}`, saldoAnterior] };
+  const campos = {
+    [saldo]: { $add: [saldoAnterior, quantidade] },
+    [total]: { $add: [ganhoAnterior, quantidade] },
+  };
+  const dentroDoLimite = {
+    $and: Object.values(campos).map(valor => ({ $lte: [valor, Number.MAX_SAFE_INTEGER] })),
+  };
+  return { campos, dentroDoLimite };
+}
+
+export async function adicionarCenouras(canal: string, membro: string, quantidade: number) {
+  const { campos, dentroDoLimite } = calcularCredito(membro, quantidade);
+  const resultado = await Plantacao.updateOne({ _id: canal, $expr: dentroDoLimite },
+    [{ $set: campos }], { updatePipeline: true });
+  return resultado.modifiedCount === 1;
+}
+
 export function abrirColheitas(canal: string) {
   return {
     async abrir(mensagem: string) {
@@ -27,21 +50,17 @@ export function abrirColheitas(canal: string) {
     async colher(mensagem: string, membro: string, cenouras: number) {
       // Registar o participante e creditar o saldo são uma única escrita no MongoDB.
       const colheita = { _id: canal, aberta: mensagem };
-      const saldo = `saldos.${membro}`;
-      const total = `totalGanho.${membro}`;
-      // Antes da loja, todo o saldo existente vinha de ganhos da plantação.
-      const saldoAnterior = { $ifNull: [`$${saldo}`, 0] };
-      const ganhoAnterior = { $ifNull: [`$${total}`, saldoAnterior] };
-      const resultado = await Plantacao.updateOne({ ...colheita, recolheram: { $ne: membro } }, [
+      const { campos, dentroDoLimite } = calcularCredito(membro, cenouras);
+      const resultado = await Plantacao.updateOne({ ...colheita, recolheram: { $ne: membro }, $expr: dentroDoLimite }, [
         { $set: {
-          [saldo]: { $add: [saldoAnterior, cenouras] },
-          [total]: { $add: [ganhoAnterior, cenouras] },
+          ...campos,
           recolheram: { $concatArrays: [{ $ifNull: ['$recolheram', []] }, [membro]] },
         } },
       ], { updatePipeline: true });
       if (resultado.modifiedCount === 1) return 'creditada';
-      const jaColheu = await Plantacao.exists({ ...colheita, recolheram: membro });
-      return jaColheu ? 'repetida' : 'encerrada';
+      const atual = await Plantacao.findOne(colheita, { recolheram: 1 }).lean();
+      if (!atual) return 'encerrada';
+      return atual.recolheram?.includes(membro) ? 'repetida' : 'limite';
     },
   };
 }
