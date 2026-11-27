@@ -1,5 +1,4 @@
 import { randomInt } from 'node:crypto';
-import { setTimeout as esperar } from 'node:timers/promises';
 import {
   ActionRowBuilder, ButtonBuilder, ButtonStyle, ChannelType, MessageFlags,
   type ButtonInteraction, type Client, type TextChannel,
@@ -13,19 +12,11 @@ export const botaoColher = 'lcnxmas26:colher';
 export function criarPlantacao() {
   const colheitas = abrirColheitas(canalPlantacao);
 
-  async function anunciar(canal: TextChannel, mensagem: string, membro: string, cenouras: number) {
-    await canal.messages.edit(mensagem, {
-      content: `Muito bem <@${membro}>, acabaste de colher **${cenouras} cenouras**! 🥕`,
-      embeds: [], components: [], allowedMentions: { parse: [] },
-    });
-    await colheitas.marcarAnunciada(mensagem);
-  }
-
   async function publicar(canal: TextChannel) {
     const botao = new ButtonBuilder().setCustomId(botaoColher).setLabel('Colher')
       .setEmoji({ name: '🥕' }).setStyle(ButtonStyle.Success);
     const mensagem = await canal.send({
-      embeds: [{ title: 'Hora da Colheita!', description: 'Clica no botão para colher algumas cenouras.', color: 0xf28c28 }],
+      embeds: [{ title: 'Hora da Colheita!', description: 'Cada participante pode colher uma vez nesta mensagem.', color: 0xf28c28 }],
       components: [new ActionRowBuilder<ButtonBuilder>().addComponents(botao)],
     });
     const anterior = await colheitas.abrir(mensagem.id);
@@ -53,10 +44,6 @@ export function criarPlantacao() {
     if (canal?.type !== ChannelType.GuildText) throw new Error('Canal da plantação indisponível.');
     await publicar(canal);
     agendar(canal);
-    for (const { mensagem, membro, cenouras } of await colheitas.pendentes()) {
-      await anunciar(canal, mensagem, membro, cenouras)
-        .catch(erro => console.error('Falha ao recuperar o anúncio da colheita.', erro.message));
-    }
   }
 
   async function colher(interacao: ButtonInteraction) {
@@ -65,18 +52,15 @@ export function criarPlantacao() {
       await interacao.reply({ content: 'Entra no evento antes de colher.', flags: MessageFlags.Ephemeral });
       return;
     }
-    const mensagem = interacao.message.id;
-    const membro = interacao.user.id;
+    await interacao.deferReply({ flags: MessageFlags.Ephemeral });
     const cenouras = randomInt(100, 1001);
-    await interacao.deferUpdate();
-    if (!await colheitas.colher(mensagem, membro, cenouras)) {
-      await interacao.followUp({ content: 'Esta colheita já terminou.', flags: MessageFlags.Ephemeral });
-      return;
-    }
-    await interacao.editReply({ content: 'Colhendo as cenouras…', embeds: [], components: [] })
-      .catch(erro => console.error('Falha ao mostrar a colheita em curso.', erro.message));
-    await esperar(10_000);
-    await anunciar(interacao.channel, mensagem, membro, cenouras);
+    const resultado = await colheitas.colher(interacao.message.id, interacao.user.id, cenouras);
+    const respostas = {
+      creditada: `Colheste **${cenouras} cenouras**! 🥕`,
+      repetida: 'Já colheste nesta colheita.',
+      encerrada: 'Esta colheita já terminou.',
+    };
+    await interacao.editReply(respostas[resultado]);
   }
 
   return { iniciar, colher };
