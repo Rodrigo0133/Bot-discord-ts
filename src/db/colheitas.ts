@@ -6,12 +6,18 @@ const premio = new Schema({
   cenouras: { type: Number, required: true },
 }, { _id: false });
 
+const compraCargo = new Schema({
+  id: { type: String, required: true },
+  emEntrega: { type: Boolean, required: true },
+}, { _id: false });
+
 const Plantacao = model('PlantacaoNatal', new Schema({
   _id: { type: String, required: true },
   aberta: String,
   saldos: { type: Map, of: Number },
   totalGanho: { type: Map, of: Number },
   pendentes: [premio],
+  comprasCargos: { type: Map, of: compraCargo },
 }));
 
 export function abrirColheitas(canal: string) {
@@ -58,5 +64,52 @@ export async function consultarSaldos(canal: string) {
   return {
     saldos: plantacao?.saldos ?? new Map<string, number>(),
     totais: plantacao?.totalGanho ?? new Map<string, number>(),
+  };
+}
+
+export function abrirCompraCargo(canal: string, membro: string, artigo: string, preco: number) {
+  const chave = `${membro}:${artigo}`;
+  const compra = `comprasCargos.${chave}`;
+  const saldo = `saldos.${membro}`;
+  const total = `totalGanho.${membro}`;
+
+  return {
+    async consultar() {
+      const plantacao = await Plantacao.findById(canal, { [compra]: 1 });
+      return plantacao?.comprasCargos?.get(chave);
+    },
+
+    async reservar(id: string) {
+      const resultado = await Plantacao.updateOne(
+        { _id: canal, [saldo]: { $gte: preco }, [compra]: { $exists: false } },
+        [{ $set: {
+          [saldo]: { $subtract: [`$${saldo}`, preco] },
+          [total]: { $ifNull: [`$${total}`, `$${saldo}`] },
+          [compra]: { id, emEntrega: false },
+        } }],
+        { updatePipeline: true },
+      );
+      return resultado.modifiedCount === 1;
+    },
+
+    async cancelar(id: string) {
+      const resultado = await Plantacao.updateOne(
+        { _id: canal, [`${compra}.id`]: id, [`${compra}.emEntrega`]: false },
+        { $inc: { [saldo]: preco }, $unset: { [compra]: 1 } },
+      );
+      return resultado.modifiedCount === 1;
+    },
+
+    async iniciarEntrega(id: string) {
+      const resultado = await Plantacao.updateOne(
+        { _id: canal, [`${compra}.id`]: id, [`${compra}.emEntrega`]: false },
+        { $set: { [`${compra}.emEntrega`]: true } },
+      );
+      return resultado.modifiedCount === 1;
+    },
+
+    async concluir(id: string) {
+      await Plantacao.updateOne({ _id: canal, [`${compra}.id`]: id }, { $unset: { [compra]: 1 } });
+    },
   };
 }
