@@ -8,6 +8,30 @@ const prefixoCompra = 'lcnxmas26:loja:';
 const cargosAntigos = ['1057422729768341698', '1185758880190443631', '1312456647913766954', '1440490867281494187'];
 const cargoXmas26 = '1574534655322095616';
 
+// Cargos de Level da roleta da branch main, por ordem de nível.
+const cargosLevel = [
+  '1036689084434874460', // 1
+  '1036689239137591338', // 2
+  '1036689359384096859', // 3
+  '1054135107855843369', // 4
+  '1036689735269236807', // 5
+  '1036689865733066883', // 10
+  '1036689926604980334', // 15
+  '1036690352167473303', // 20
+  '1036690495964971119', // 30
+  '1036690587967033468', // 40
+  '1095769327506030644', // 50
+  '1095769610663501854', // 60
+  '1095770344285020241', // 70
+  '1095770612171014265', // 80
+  '1095772878668058755', // 90
+  '1095773119416914101', // 100
+  '1202733155451150468', // 200
+  '1292081351154991174', // 300
+  '1354531408194048108', // 400
+  '1396186073960288379', // 500
+];
+
 const artigos: { id: string; titulo: string; preco: number; descricao: string; cargos?: string[] }[] = [
   {
     id: 'natal-antigos', titulo: 'Cargos de Natal antigos', preco: 3000,
@@ -16,7 +40,8 @@ const artigos: { id: string; titulo: string; preco: number; descricao: string; c
   },
   {
     id: 'level', titulo: '⬆️ Cargos de Level', preco: 3000,
-    descricao: 'Recebe todos os cargos de Level, exceto <@&1542896491457417367>.',
+    descricao: 'Recebe os 20 cargos de Level da roleta, do Level 1 ao Level 500. O <@&1542896491457417367> fica de fora.',
+    cargos: cargosLevel,
   },
   {
     id: 'boost-cenouras', titulo: 'Boost de cenouras', preco: 10000,
