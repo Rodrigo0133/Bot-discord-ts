@@ -1,5 +1,7 @@
 # Regras do projeto
 
+- Antes de cada alteração, lê o `README.md` e executa `git pull --ff-only origin bot-natal` na branch `bot-natal`. Se o pull falhar, resolve ou comunica o bloqueio antes de editar. Se o pull atualizar o README, relê-o.
+- Atualiza o `README.md` quando uma alteração mudar o estado de uma funcionalidade, os próximos passos ou os requisitos de configuração.
 - Desenvolve o bot de Natal na branch `bot-natal`, em TypeScript com `discord.js`. Mantém o arranque em `src/index.ts` e a lógica dos botões em `src/buttons/`. Concentra a ligação, modelos e operações do MongoDB em `src/db/`, usando Mongoose.
 - Antes de executar uma instalação com npm, indica os pacotes envolvidos, explica o que fazem e por que são necessários para o pedido. Aguarda autorização explícita do utilizador. Esta regra inclui dependências de desenvolvimento.
 - Faz um commit local por cada alteração lógica concluída e verificada.
